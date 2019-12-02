@@ -1,0 +1,24 @@
+{
+  "config" : { "haltOnError": false },
+  "source": { "file": { "path": "FILEPATH/RNA-chrY.csv" } },
+  "extractor": { "csv": { "columns": ["id", "accession", "type", "gene_id", "protein_id"],
+                                "columnsOnFirstLine": true } },
+  "transformers": [
+    { "vertex": { "class": "RNA" } },
+    { "edge": { "class": "HasProtein",  "joinFieldName": "protein_id", "lookup": "Protein.accession" } },
+    { "edge": { "class": "HasGene",  "joinFieldName": "gene_id", "lookup": "Gene.entrez_id" } }
+  ],
+  "loader": {
+    "orientdb": {
+       "dbURL": "plocal:../databases/snpdb",
+       "dbType": "graph",
+       "classes": [
+         {"name": "RNA", "extends": "V"},
+         {"name": "HasProtein", "extends": "E"},
+         {"name": "HasGene", "extends": "E"}
+       ], "indexes": [
+         {"class":"RNA", "fields":["id:int"], "type":"UNIQUE" }
+       ]
+    }
+  }
+}

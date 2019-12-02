@@ -1,0 +1,19 @@
+{
+  "source": { "file": { "path": "FILEPATH/Gene-chrY.csv" } },
+  "extractor": { "csv": { "columns": ["id", "entrez_id", "symbol", "name"],
+                                "columnsOnFirstLine": true } },
+  "transformers": [
+    { "vertex": { "class": "Gene" } }
+  ],
+  "loader": {
+    "orientdb": {
+       "dbURL": "plocal:../databases/snpdb",
+       "dbType": "graph",
+       "classes": [
+         {"name": "Gene", "extends": "V"}
+       ], "indexes": [
+         {"class":"Gene", "fields":["id:int"], "type":"UNIQUE" }
+       ]
+    }
+  }
+}

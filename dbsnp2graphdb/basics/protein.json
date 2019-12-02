@@ -1,0 +1,21 @@
+{
+  "source": { "file": { "path": "FILEPATH/Protein-chrY.csv" } },
+  "extractor": { "csv": { "columns": ["id", "accession", "placeholder", "type", "gene_id"],
+                                "columnsOnFirstLine": true } },
+  "transformers": [
+    { "vertex": { "class": "Protein" } },
+    { "edge": { "class": "HasGene",  "joinFieldName": "gene_id", "lookup": "Gene.entrez_id" } }
+  ],
+  "loader": {
+    "orientdb": {
+       "dbURL": "plocal:../databases/snpdb",
+       "dbType": "graph",
+       "classes": [
+         {"name": "Protein", "extends": "V"},
+         {"name": "HasGene", "extends": "E"}
+       ], "indexes": [
+         {"class":"Protein", "fields":["id:int"], "type":"UNIQUE" }
+       ]
+    }
+  }
+}
